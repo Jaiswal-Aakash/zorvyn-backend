@@ -2,17 +2,38 @@ const prisma = require("../config/prisma");
 const { setCache, getCache } = require("../utils/cache");
 const { singleFlight } = require("../utils/singleFlight");
 
+function buildTrendLast7Days(rows) {
+  const slots = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - i);
+    d.setUTCHours(0, 0, 0, 0);
+    const date = d.toISOString().slice(0, 10);
+    slots.push({ date, income: 0, expense: 0 });
+  }
+  const byDate = Object.fromEntries(
+    slots.map((s) => [s.date, { income: s.income, expense: s.expense }])
+  );
+  for (const t of rows) {
+    const key = new Date(t.date).toISOString().slice(0, 10);
+    if (!byDate[key]) continue;
+    if (t.type === "INCOME") byDate[key].income += t.amount;
+    else byDate[key].expense += t.amount;
+  }
+  return slots.map((s) => ({
+    date: s.date,
+    income: byDate[s.date].income,
+    expense: byDate[s.date].expense,
+  }));
+}
+
 const getSummary = async (req, res) => {
-  // console.log("Incoming request to summary", new Date());
   try {
     const userId = req.user.id;
     const cacheKey = `summary-${userId}`;
 
-    const start = Date.now();
     const cachedData = getCache(cacheKey);
     if (cachedData) {
-      const duration = Date.now() - start;
-      // console.log("CACHE HIT", cacheKey, "took", duration, "ms");
       return res.json({
         source: "cache",
         ...cachedData,
@@ -20,7 +41,11 @@ const getSummary = async (req, res) => {
     }
 
     const data = await singleFlight(cacheKey, async () => {
-      const [byType, categoryTotals, recent] = await Promise.all([
+      const start7d = new Date();
+      start7d.setUTCDate(start7d.getUTCDate() - 6);
+      start7d.setUTCHours(0, 0, 0, 0);
+
+      const [byType, categoryTotals, recent, trendRows] = await Promise.all([
         prisma.transaction.groupBy({
           by: ["type"],
           _sum: { amount: true },
@@ -36,6 +61,10 @@ const getSummary = async (req, res) => {
           orderBy: { date: "desc" },
           take: 5,
         }),
+        prisma.transaction.findMany({
+          where: { userId, date: { gte: start7d } },
+          select: { date: true, amount: true, type: true },
+        }),
       ]);
 
       const incomeSum =
@@ -49,6 +78,7 @@ const getSummary = async (req, res) => {
         netBalance: incomeSum - expenseSum,
         categoryTotals,
         recentTransactions: recent,
+        trendLast7Days: buildTrendLast7Days(trendRows),
       };
 
       setCache(cacheKey, computed, 60000);

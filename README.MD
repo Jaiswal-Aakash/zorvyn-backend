@@ -83,12 +83,22 @@ This design ensures the system is clean, scalable, and easy to extend.
 
 ---
 
+## Assumptions
+
+Registration — `POST /api/auth/register` is open so evaluators can create accounts without a pre seeded admin.
+
+Authentication — After login, the API trusts the JWT for `userId` and `role`. Revoking access for an INACTIVE user does not take effect until their token expires.
+
+Dashboard trends — `GET /api/dashboard/summary` includes `trendLast7Days`: per day income and expense for the last seven calendar days.
+
+---
+
 # FEATURES
 
 - Authentication using JWT
 - Role Based Access Control (Viewer, Analyst, Admin)
 - Financial Transactions CRUD
-- Dashboard Summary APIs (aggregations)
+- Dashboard Summary APIs (aggregations, category breakdown, recent activity, last 7 day trend)
 - Filtering & Pagination
 - Security (rate limiting, input sanitization)
 - Unit Testing using Jest
@@ -105,7 +115,7 @@ This design ensures the system is clean, scalable, and easy to extend.
 - Cache Invalidation
 - Input Validation using Zod schemas
 - Rate Limiting
-- Role Based Access Controll
+- Role Based Access Control
 - Efficient Data Modeling (Prisma + postgresql)
 
 ---

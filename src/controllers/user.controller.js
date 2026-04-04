@@ -1,4 +1,9 @@
+const { z } = require("zod");
 const prisma = require("../config/prisma");
+const {
+  updateUserRoleSchema,
+  updateUserStatusSchema,
+} = require("../validations/user.validation");
 
 const getAllUsers = async (req,res) => {
     try{
@@ -20,7 +25,7 @@ const getAllUsers = async (req,res) => {
 const updateUserRole = async (req,res) => {
     try{
     const {id} = req.params;
-    const {role} = req.body;
+    const { role } = updateUserRoleSchema.parse(req.body);
 
     const user = await prisma.user.update({
         where: {id},
@@ -28,21 +33,27 @@ const updateUserRole = async (req,res) => {
     });
     res.json(user);
     } catch (err) {
+        if (err instanceof z.ZodError) {
+            return res.status(400).json({ error: err.errors[0]?.message ?? "Invalid input" });
+        }
         res.status(400).json({error:err.message});
     }
 };
 
 const updateUserStatus = async (req,res) => {
     try{
-        const {id} = req.params;
-        const {status} = req.body;
+    const {id} = req.params;
+    const { status } = updateUserStatusSchema.parse(req.body);
 
-        const user = await prisma.user.update({
-            where: {id},
-            data: {status},
-        });
-        res.json(user);
+    const user = await prisma.user.update({
+        where: {id},
+        data: {status},
+    });
+    res.json(user);
     } catch (err) {
+        if (err instanceof z.ZodError) {
+            return res.status(400).json({ error: err.errors[0]?.message ?? "Invalid input" });
+        }
         res.status(400).json({error:err.message});
     }
 };

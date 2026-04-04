@@ -55,7 +55,16 @@ const login = async (data) => {
     role: user.role,
   });
 
-  return { user, token };
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      createdAt: user.createdAt,
+    },
+    token,
+  };
 };
 
 module.exports = { register, login };
