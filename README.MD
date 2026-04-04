@@ -2,6 +2,15 @@ This project is a backend system for a finance dashboard application. It support
 
 The goal of this project is to demonstrate clean backend architecture, proper data modeling, secure API design, and scalable query handling.
 
+# TECH STACK
+
+- Backend: Node.js, Express.js
+- Database: PostgreSQL (Supabase)
+- ORM: Prisma
+- Authentication: JWT + bcrypt
+- Testing: Jest + Supertest
+- Security: Helmet, Rate Limiting
+
 ## Backend Architecture
 
 The backend follows a layered architecture to ensure separation of concerns, scalability, and maintainability.
@@ -117,17 +126,6 @@ Dashboard trends — `GET /api/dashboard/summary` includes `trendLast7Days`: per
 - Rate Limiting
 - Role Based Access Control
 - Efficient Data Modeling (Prisma + postgresql)
-
----
-
-# TECH STACK
-
-- Backend: Node.js, Express.js
-- Database: PostgreSQL (Supabase)
-- ORM: Prisma
-- Authentication: JWT + bcrypt
-- Testing: Jest + Supertest
-- Security: Helmet, Rate Limiting
 
 ---
 
