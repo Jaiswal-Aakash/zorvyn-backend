@@ -1,11 +1,13 @@
-DEPLOYED LINK - https://zorvyn-backend-i7o7.onrender.com/
+Deployed API: https://zorvyn-backend-i7o7.onrender.com  
+Swagger: https://zorvyn-backend-i7o7.onrender.com/api-docs  
+OpenAPI file: https://zorvyn-backend-i7o7.onrender.com/openapi.json  
 
 # Auth API
 
 Method : POST
 Endpoint : /api/auth/register
-Body : { email, password, role }
-Required Role : Admin
+Body : { email, password }
+Required Role : (none, public)
 Description : Create a new user
 
 Method : POST

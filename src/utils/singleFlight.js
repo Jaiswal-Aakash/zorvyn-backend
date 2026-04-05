@@ -1,5 +1,6 @@
 const pending = new Map();
 function singleFlight(key, fn) {
+
   if (pending.has(key)) {
     return pending.get(key);
   }

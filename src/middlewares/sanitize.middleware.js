@@ -2,6 +2,7 @@ const sanitize = (obj) => {
     if(!obj || typeof obj !== 'object') return obj;
 
     for(let key in obj) {
+        // drop keys that look like operators
         if(key.startsWith('$') || key.startsWith('.')){
             delete obj[key];
         } else if(typeof obj[key] === 'object'){

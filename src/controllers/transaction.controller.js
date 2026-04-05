@@ -12,7 +12,7 @@ const getAllTransactions = async (req,res) => {
         const {type, category, startDate, endDate } = req.cleanQuery;
 
         const filters = {
-            userId, 
+            userId,
             ...(type && {type}),
             ...(category && {category}),
             ...(startDate && endDate && {

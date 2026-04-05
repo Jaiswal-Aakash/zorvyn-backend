@@ -9,8 +9,7 @@ const authenticate = async (req, res, next) => {
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Trust verified JWT (id + role); avoids a DB round-trip per request.
-        // Revocation is by expiry or future token blacklist if needed.
+        // id + role from token no user row fetch - inactive still works until expiry
         req.user = { id: decoded.id, role: decoded.role };
         next();
     } catch (err) {

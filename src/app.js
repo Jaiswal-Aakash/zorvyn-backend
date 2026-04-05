@@ -1,6 +1,8 @@
 require("dotenv").config();
 
+const path = require("path");
 const express = require("express");
+const swaggerUi = require("swagger-ui-express");
 
 const helmet = require("helmet");
 const cors = require("cors");
@@ -15,8 +17,12 @@ const userRoutes = require("./routes/user.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const sanitizeMiddleware = require("./middlewares/sanitize.middleware");
 
-// middleware
+const openApiSpec = require(path.join(__dirname, "..", "openapi.json"));
+
 app.use(express.json());
+
+app.get("/openapi.json", (req, res) => res.json(openApiSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 app.use(helmet());
 

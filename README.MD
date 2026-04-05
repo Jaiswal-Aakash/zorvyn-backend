@@ -2,6 +2,17 @@ This project is a backend system for a finance dashboard application. It support
 
 The goal of this project is to demonstrate clean backend architecture, proper data modeling, secure API design, and scalable query handling.
 
+## Deployed API and documentation
+
+Replace the host below if your Render URL changes.
+
+    Link 
+API base `https://zorvyn-backend-i7o7.onrender.com`
+Swagger UI `https://zorvyn-backend-i7o7.onrender.com/api-docs`
+OpenAPI JSON `https://zorvyn-backend-i7o7.onrender.com/openapi.json`
+
+For forms that ask for a single link, use the Swagger UI URL (`/api-docs`) or the OpenAPI JSON URL if they want importable spec (Postman: Import → Link).
+
 # TECH STACK
 
 - Backend: Node.js, Express.js
@@ -10,6 +21,7 @@ The goal of this project is to demonstrate clean backend architecture, proper da
 - Authentication: JWT + bcrypt
 - Testing: Jest + Supertest
 - Security: Helmet, Rate Limiting
+- API docs: Swagger UI (`/api-docs`) + `openapi.json`
 
 ## Backend Architecture
 

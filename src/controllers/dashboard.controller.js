@@ -34,6 +34,7 @@ const getSummary = async (req, res) => {
 
     const cachedData = getCache(cacheKey);
     if (cachedData) {
+      // in-memory hit busted when transactions change
       return res.json({
         source: "cache",
         ...cachedData,
@@ -41,6 +42,7 @@ const getSummary = async (req, res) => {
     }
 
     const data = await singleFlight(cacheKey, async () => {
+      // cache miss only one of these runs at a time per user
       const start7d = new Date();
       start7d.setUTCDate(start7d.getUTCDate() - 6);
       start7d.setUTCHours(0, 0, 0, 0);
