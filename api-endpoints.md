@@ -1,3 +1,5 @@
+DEPLOYED LINK - https://zorvyn-backend-i7o7.onrender.com/
+
 # Auth API
 
 Method : POST
